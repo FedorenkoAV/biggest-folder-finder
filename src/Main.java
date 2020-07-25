@@ -38,7 +38,6 @@ public class Main {
                     .filter(Files::isRegularFile)
                     .map(Path::toFile)
                     .mapToLong(File::length)
-                    .peek(System.out::println)
                     .sum();
         } catch (Exception e) {
             e.printStackTrace();
