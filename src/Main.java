@@ -5,13 +5,25 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         String folderPath = "d:\\Книги\\";
         File file = new File(folderPath);
-        System.out.println(getFolderSize(file));
+        long start = System.currentTimeMillis();
+
+        FolderSizeCalculator calculator =
+                new FolderSizeCalculator(file);
+        ForkJoinPool pool = new ForkJoinPool();
+        long size = pool.invoke(calculator);
+        System.out.println(size);
+
+        //System.out.println(getFolderSize(file));
+
+        long duration = System.currentTimeMillis() - start;
+        System.out.println(duration + " ms");
     }
 
     public static long getFolderSize(File folder) {
@@ -76,4 +88,20 @@ public class Main {
         }
         return sizeInBytes[0];
     }
+
+    private static String getHumanReadable(long size) {
+        int index = -1;
+        char[] chArray = {'K', 'M', 'G', 'T', 'P', 'E'};
+        if (size < 1024) {
+            return size + " B";
+        }
+        double doubleNumber = size;
+        while (doubleNumber >= 1024.0) {
+            doubleNumber /= 1024.0;
+            index++;
+        }
+        return String.format("%.1f%s", doubleNumber, " " + chArray[index] + "b");
+    }
+
+
 }
