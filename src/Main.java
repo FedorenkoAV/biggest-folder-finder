@@ -1,19 +1,17 @@
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        String folderPath = "d:\\Книги\\";
+//        String folderPath = "d:\\Книги\\";
+//        long sizeLimit = 50 * 1024 * 1024;
+
+        ParametrsBag bag = new ParametrsBag(args);
+        String folderPath = bag.getPath();
+        long sizeLimit = bag.getLimit();
+
         File file = new File(folderPath);
-        Node root = new Node(file);
+        Node root = new Node(file, sizeLimit);
         long start = System.currentTimeMillis();
 
         FolderSizeCalculator calculator =
